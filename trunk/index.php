@@ -1,12 +1,17 @@
 <?php
 /**
-Plugin Name: Islamic Content Archive For Truth Seeker
-Plugin URI: http://www.truth-seeker.info
-Description: Truth Seeker aspires to be a unique and reliable refuge regarding the truth of the creation, the Creator Allah and His existence, and the purpose of life.
-Version: 1.1
-Author: EDC Team (E-Da`wah Committee)
-Author URI: http://www.islam.com.kw/DawahApps
-License: Free
+ * Islamic Content Archive For Truth Seeker
+ *
+ * Plugin Name: Islamic Content Archive For Truth Seeker
+ * Plugin URI:  https://wordpress.org/plugins/islamic-content-archive-for-truth-seeker/
+ * Description: Truth Seeker aspires to be a unique and reliable refuge regarding the truth of the creation, the Creator Allah and His existence, and the purpose of life.
+ * Version:     1.3.7
+ * Author:      EDC TEAM (E-Dawah Committee)
+ * Author URI:  https://edc.org.kw
+ * License:     GPLv2 or later
+ * License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * Requires at least: 5.0
+ * Requires PHP: 7.4
 */
 
 define('OPICTS_PLUGIN_PATH',plugin_dir_path( __FILE__ ));
@@ -39,9 +44,10 @@ function OPICTS_plugin_install(){
 	add_option(OPICTS_Input_SLUG.'source', $source);
 	add_option(OPICTS_Input_SLUG.'cronjobtime', 'everyhour');
 	add_option(OPICTS_Input_SLUG.'version', '1.1');
+
 }
 function OPICTS_plugin_uninstall(){
-	
+
 	$options = get_option(OPICTS_Input_SLUG.'language');
  	if( is_array($options) && $options['uninstall'] === true){
 		delete_option(OPICTS_Input_SLUG.'language');
@@ -50,7 +56,7 @@ function OPICTS_plugin_uninstall(){
 		delete_option(OPICTS_Input_SLUG.'version');
 	}
 }
-register_activation_hook(plugin_basename(__FILE__),'OPICTS_plugin_install'); 
+register_activation_hook(plugin_basename(__FILE__),'OPICTS_plugin_install');
 register_deactivation_hook(plugin_basename(__FILE__), 'OPICTS_plugin_uninstall');
 
 include_once(OPICTS_PLUGIN_PATH.'load.php');

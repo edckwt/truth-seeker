@@ -21,6 +21,8 @@ class html_ts_helper extends app_ts_helpers {
 
 	}
 
+	
+
 	protected function formateAttr($attr) {
 		if ($this -> attrs) {
 			foreach ($this->attrs as $key => $value) {
@@ -33,7 +35,7 @@ class html_ts_helper extends app_ts_helpers {
 
 		// ====================== Default Attr Start ======================
 		if (!array_key_exists('id', $attr)) {
-			$attr['id'] = ucfirst($attr['name']);
+			$attr['id'] = ucfirst(str_replace("[]","",$attr['name']));
 		}
 		// ====================== Default Attr End ========================
 
@@ -119,9 +121,13 @@ class html_ts_helper extends app_ts_helpers {
 	}
 
 	protected function _radio($attr = array()) {
+	    $loop = 0;
+		$html = null;
 		foreach ($attr['options'] as $key => $value) {
+			$loop++;
 			$checked = NULL;
-			$html .= sprintf('<p><input type="radio" name="%s" id="%s" value="%s"  %s /> <span>%s</span></p>', OPICTS_Input_SLUG.$attr['name'], $attr['id'], $key, $checked, $value);
+			$input_id = $attr['id'].'_'.$loop;
+			$html .= sprintf('<p><input type="radio" name="%s" id="%s" value="%s"  %s /> <label for="%s">%s</label></p>', OPICTS_Input_SLUG.$attr['name'], $input_id, $key, $checked, $input_id, $value);
 		}
 
 		return $html;
@@ -141,7 +147,10 @@ class html_ts_helper extends app_ts_helpers {
 		
 		$option = get_option(OPICTS_Input_SLUG.str_replace('[]','',$get_attr_name));
 		$html = '';
+		$loop = 0;
 		foreach ($get_attr_options as $key => $value) {
+		    $loop++;
+			$input_id = $get_attr_id.'_'.$loop;
 			if(is_array($option) && in_array($key, $option)){
 				$checked = 'checked="checked"';
 			}elseif(is_string($option) && $key = $option ){
@@ -150,7 +159,7 @@ class html_ts_helper extends app_ts_helpers {
 				$checked = '';
 			}
 			
-			$html .= sprintf('<p><label for="%s"><input type="checkbox" name="%s" id="%s" value="%s" %s /> <span>%s</span><label></p>', $key, OPICTS_Input_SLUG.$get_attr_name, $key, $key, $checked, $value);
+			$html .= sprintf('<p><input type="checkbox" name="%s" id="%s" value="%s" %s /> <label for="%s">%s<label></p>',  OPICTS_Input_SLUG.$get_attr_name, $input_id, $key,  $checked, $input_id, $value);
 		}
 
 		return $html;
@@ -158,10 +167,10 @@ class html_ts_helper extends app_ts_helpers {
 	
 	public function format_category_json($url='')
 	{
-		$source = json_decode(opic_get_data($url));
+		$source = opic_ts_get_data($url);
 
 		$catList = array();
-		if($source->status == 'ok' && !empty($source->categories)){
+		if(isset($source->status) && $source->status == 'ok' && !empty($source->categories)){
 			foreach ($source->categories as $key => $value) {
 				if(is_array($value)){
 					foreach ($value as $_key => $_value) {
@@ -179,18 +188,43 @@ class html_ts_helper extends app_ts_helpers {
 		return array();
 	}
 	
-	public function categoryFromTransient($url=NULL,$slug)
+	public function categoryFromTransient($url=NULL,$slug='')
 	{
-		$oldData = opic_get_transient($slug);
-		if(!empty($oldData)){
+		$oldData = opic_ts_get_transient($slug);
+		if(!empty($oldData) && isset($oldData["opic_value"]) && is_array($oldData["opic_value"]) && count($oldData["opic_value"]) > 0){
 			return (array)$oldData['opic_value'];	
 		}else{
 			$set_data = $this->format_category_json($url);
-			opic_set_transient($slug,$set_data);
-			return $set_data;
+			if(!is_wp_error($set_data))
+			{
+                opic_ts_set_transient($slug,$set_data);
+                return $set_data;  
+			}
+			else
+			{
+			   $this->general_admin_notice($set_data); 
+			}
+			return [];
+
 		}
 		
 	}
+	
+	public function general_admin_notice($set_data){
+
+        $error = "";
+        if($set_data->errors)
+        {
+            foreach($set_data->errors as $k => $val){
+               $error.=  "<p>".$k.":  <b>".join("<br/>",$val)."</b></p>";
+            }  
+        }
+         echo '<div class="notice notice-error  is-dismissible">
+             <p>حدث خطا اثناء جلب البيانات</p>
+             <p>'.$error.'</p>
+         </div>';
+   
+    }	
 
 }
 

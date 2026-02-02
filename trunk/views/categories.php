@@ -1,12 +1,12 @@
 <?php
 $TSHtml = new html_ts_helper();
-global $tscategories,$opicts_categories_lang;
+global $tscategories,$opic_ts_categories_lang;
  
 $category_slug = esc_attr($_GET['cat_slug']);
 
 $opicts_lang = get_option(OPICTS_Input_SLUG.'language');
-$link = $opicts_categories_lang[$opicts_lang][$category_slug]['url'];
-$jsoncaturl = $opicts_categories_lang[$opicts_lang][$category_slug]['cat'];
+$link = $opic_ts_categories_lang[$opicts_lang][$category_slug]['url'];
+$jsoncaturl = $opic_ts_categories_lang[$opicts_lang][$category_slug]['cat'];
 $slug = $category_slug.'_'.$opicts_lang;
 $cat_options = $TSHtml->categoryFromTransient($jsoncaturl,$slug);
 ?>

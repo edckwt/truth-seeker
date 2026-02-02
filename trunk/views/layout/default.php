@@ -1,9 +1,9 @@
 <form method="post" action="<?php admin_url( 'options-general.php?page='.OPICTS_Page_SLUG ); ?>">
 <?php
-	echo wp_nonce_field( "edc-settings-page" ); 
+	echo wp_nonce_field(OPICTS_Page_SLUG,OPICTS_Page_SLUG."-settings-page"); 
 	
 	$TSHtmlHelper = new html_ts_helper();
-	$TSHtmlHelper->opic_admin_tabs();
+	$TSHtmlHelper->opic_ts_admin_tabs();
 	$TSHtmlHelper->MainContent($mainViewFile);
 ?>
    <p class="submit" style="clear: both;">

@@ -10,6 +10,6 @@
 </div>
 <hr />
 <?php
-$lang = array('ara' => 'Arabic', 'eng' => 'English'/*,'rom'=>'Romanian','rus'=>'Russian','spa'=>'Spanish','hin'=>'Hindi','tag'=>'Tagalog','ben'=>'Bengali','sin'=>'Sinhalese','nep'=>'Nepali','tam'=>'Tamil','tel'=>'Telugu','mal'=>'Malayalm'*/);
-echo $this -> Input('select', array('name' => 'language', 'options' => $lang, 'label' => $this -> getLang('label-selectlang')));
+
+echo $this -> Input('select', array('name' => 'language', 'options' => $this->getLangList(), 'label' => $this -> getLang('label-selectlang')));
 ?>

@@ -25,6 +25,10 @@ class app_ts_controlers {
 					$this->_UpdateOptions($key,$value);
 				}
 			}
+			if ( isset($_POST[OPICTS_Input_SLUG."-settings-page"]))
+			{
+				add_action( 'admin_notices', [$this,'alert_success']);
+			}
 		}
 	}
 	
@@ -34,13 +38,18 @@ class app_ts_controlers {
 			$old_option = get_option($key);
 			if($old_option !== false){
 				// update
-				update_option($key,$value,true);
+				return update_option($key,$value,true);
 			}else{
 				// add
-				add_option($key,$value); 
+				return add_option($key,$value); 
 			}
 		}
 	}
+	public function alert_success() {
+		$class = 'notice notice-success is-dismissible';
+		$message = __( 'Done');
+		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) ); 
+	}	
 	public function loadModel($modelname='')
 	{
 		$modelname = $this->preloadfilename($modelname,'model');

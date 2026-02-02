@@ -12,7 +12,7 @@ class app_ts_models {
 	
 	public function getCategoryBySlug()
 	{
-		global $opicts_categories_lang;
+		global $opic_ts_categories_lang;
 		$return = array();
 		$table = $this->wpdb->prefix.'options';
 		$like = OPICTS_Input_SLUG."category_".get_option(OPICTS_Input_SLUG.'language').'_';
@@ -24,7 +24,7 @@ class app_ts_models {
 				$return[$key]['option_id'] = $value->option_id;
 				$return[$key]['option_name'] = $value->option_name;
 				$return[$key]['option_slug'] = str_replace($like,'',$value->option_name);
-				$return[$key]['option_url'] = $opicts_categories_lang[get_option(OPICTS_Input_SLUG.'language')][$return[$key]['option_slug']]['importurl'];
+				$return[$key]['option_url'] = $opic_ts_categories_lang[get_option(OPICTS_Input_SLUG.'language')][$return[$key]['option_slug']]['importurl'];
 				$return[$key]['option_value'] = unserialize($value->option_value);
 				$return[$key]['import_url'] = array();
 				if(is_array($return[$key]['option_value'])){
